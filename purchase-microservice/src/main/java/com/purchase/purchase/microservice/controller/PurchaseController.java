@@ -24,9 +24,9 @@ public class PurchaseController {
     @Autowired
     private PurchaseService service;
 
-    @Operation(summary = "Get purchase by ID", description = "Search a product by its ID a return it")
+    @Operation(summary = "Get purchase by ID", description = "Search a purchase by its ID a return it")
     @ApiResponses({
-            @ApiResponse(responseCode = "404", description = "Product not found"),
+            @ApiResponse(responseCode = "404", description = "Purchase not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @GetMapping("/{id}")
@@ -34,12 +34,18 @@ public class PurchaseController {
         return new ResponseEntity<>(service.getPurchaseById(id), HttpStatus.OK);
     }
 
+    @Operation(summary = "Get purchase list by ProductType", description = "Return a purchase list by its ProductType")
+    @ApiResponses({
+            @ApiResponse(responseCode = "404", description = "ProductType not found"),
+            @ApiResponse(responseCode = "400", description = "Bad Request."),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @GetMapping("product-type/{id}")
     public ResponseEntity<List<PurchaseResponse>> getPurchaseByProductType(@PathVariable Long id) throws ResourceNotFoundException {
         return new ResponseEntity<>(service.getAllPurchasesByProductTypeId(id), HttpStatus.OK);
     }
 
-    @Operation(summary = "List of products", description = "Return a list with all existing products")
+    @Operation(summary = "List of purchases", description = "Return a list with all existing purchases")
     @ApiResponses({
             @ApiResponse(responseCode = "404", description = "List of products not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
@@ -49,6 +55,12 @@ public class PurchaseController {
         return new ResponseEntity<>(service.getAllPurchases(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Get a purchase list by user ID", description = "Return a purchase list by user ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "400", description = "Bad Request."),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @GetMapping("user/{id}")
     public ResponseEntity<List<PurchaseResponse>> getPurchaseByUserId(@PathVariable Long id) throws ResourceNotFoundException {
         return new ResponseEntity<>(service.getAllPurchasesByUserId(id), HttpStatus.OK);
@@ -68,6 +80,7 @@ public class PurchaseController {
 
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "No content, deleted."),
+            @ApiResponse(responseCode = "400", description = "Bad Request."),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @Operation(summary = "Delete purchase", description = "Delete a purchase by its ID")
