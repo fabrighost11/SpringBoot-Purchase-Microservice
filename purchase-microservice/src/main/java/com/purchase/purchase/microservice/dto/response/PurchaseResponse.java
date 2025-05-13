@@ -7,15 +7,17 @@ public class PurchaseResponse {
     private Long id;
     private Long userId;
     private Long productId;
+    private Long productTypeId;
     private Integer quantity;
 
     public PurchaseResponse() {
     }
 
-    public PurchaseResponse(Long id, Long userId, Long productId, Integer quantity) {
+    public PurchaseResponse(Long id, Long userId, Long productId, Long productTypeId, Integer quantity) {
         this.id = id;
         this.userId = userId;
         this.productId = productId;
+        this.productTypeId = productTypeId;
         this.quantity = quantity;
     }
 
@@ -43,6 +45,14 @@ public class PurchaseResponse {
         this.productId = productId;
     }
 
+    public Long getProductTypeId() {
+        return productTypeId;
+    }
+
+    public void setProductTypeId(Long productTypeId) {
+        this.productTypeId = productTypeId;
+    }
+
     public Integer getQuantity() {
         return quantity;
     }
@@ -51,16 +61,15 @@ public class PurchaseResponse {
         this.quantity = quantity;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         PurchaseResponse that = (PurchaseResponse) o;
-        return Objects.equals(id, that.id) && Objects.equals(userId, that.userId) && Objects.equals(productId, that.productId) && Objects.equals(quantity, that.quantity);
+        return Objects.equals(id, that.id) && Objects.equals(userId, that.userId) && Objects.equals(productId, that.productId) && Objects.equals(productTypeId, that.productTypeId) && Objects.equals(quantity, that.quantity);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, productId, quantity);
+        return Objects.hash(id, userId, productId, productTypeId, quantity);
     }
 }

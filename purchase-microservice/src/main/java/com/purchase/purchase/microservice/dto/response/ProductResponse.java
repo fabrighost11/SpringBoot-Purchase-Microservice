@@ -8,17 +8,19 @@ public class ProductResponse {
     private String name;
     private Double price;
     private Integer stock;
-    private String productType;
+    private Long productTypeId;
+    private String productTypeName;
 
     public ProductResponse() {
     }
 
-    public ProductResponse(Long id, String name, Double price, Integer stock, String productType) {
+    public ProductResponse(Long id, String name, Double price, Integer stock, Long productTypeId, String productTypeName) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.stock = stock;
-        this.productType = productType;
+        this.productTypeId = productTypeId;
+        this.productTypeName = productTypeName;
     }
 
     public Long getId() {
@@ -53,23 +55,31 @@ public class ProductResponse {
         this.stock = stock;
     }
 
-    public String getProductTypeId() {
-        return productType;
+    public Long getProductTypeId() {
+        return productTypeId;
     }
 
-    public void setProductTypeId(String productType) {
-        this.productType = productType;
+    public void setProductTypeId(Long productTypeId) {
+        this.productTypeId = productTypeId;
+    }
+
+    public String getProductTypeName() {
+        return productTypeName;
+    }
+
+    public void setProductTypeName(String productTypeName) {
+        this.productTypeName = productTypeName;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ProductResponse that = (ProductResponse) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(price, that.price) && Objects.equals(stock, that.stock) && Objects.equals(productType, that.productType);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(price, that.price) && Objects.equals(stock, that.stock) && Objects.equals(productTypeId, that.productTypeId) && Objects.equals(productTypeName, that.productTypeName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, price, stock, productType);
+        return Objects.hash(id, name, price, stock, productTypeId, productTypeName);
     }
 }

@@ -8,17 +8,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class WebClientConfig {
 
     @Bean
-    public WebClient productClient(){
-        return WebClient.builder().baseUrl("http://localhost:8080/api/product").build();
+    public WebClient webClient(WebClient.Builder builder) {
+        return builder.build();
     }
 
-    @Bean
-    public WebClient userClient(){
-        return WebClient.builder().baseUrl("http://localhost:8081/api/user").build();
-    }
-
-    @Bean
-    public WebClient productTypeClient(){
-        return WebClient.builder().baseUrl("http://localhost:8080/api/product-type").build();
-    }
 }

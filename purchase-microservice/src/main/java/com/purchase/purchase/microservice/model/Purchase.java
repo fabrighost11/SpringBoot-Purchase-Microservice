@@ -14,16 +14,19 @@ public class Purchase {
     private Long userId;
     @Column(name = "product_id")
     private Long productId;
+    @Column(name = "product_type_id")
+    private Long productTypeId;
     @Column(name = "quantity")
     private Integer quantity;
 
     public Purchase() {
     }
 
-    public Purchase(Long id, Long userId, Long productId, Integer quantity) {
+    public Purchase(Long id, Long userId, Long productId, Long productTypeId, Integer quantity) {
         this.id = id;
         this.userId = userId;
         this.productId = productId;
+        this.productTypeId = productTypeId;
         this.quantity = quantity;
     }
 
@@ -51,6 +54,14 @@ public class Purchase {
         this.productId = productId;
     }
 
+    public Long getProductTypeId() {
+        return productTypeId;
+    }
+
+    public void setProductTypeId(Long productTypeId) {
+        this.productTypeId = productTypeId;
+    }
+
     public Integer getQuantity() {
         return quantity;
     }
@@ -59,16 +70,15 @@ public class Purchase {
         this.quantity = quantity;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Purchase purchase = (Purchase) o;
-        return Objects.equals(id, purchase.id) && Objects.equals(userId, purchase.userId) && Objects.equals(productId, purchase.productId) && Objects.equals(quantity, purchase.quantity);
+        return Objects.equals(id, purchase.id) && Objects.equals(userId, purchase.userId) && Objects.equals(productId, purchase.productId) && Objects.equals(productTypeId, purchase.productTypeId) && Objects.equals(quantity, purchase.quantity);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, productId, quantity);
+        return Objects.hash(id, userId, productId, productTypeId, quantity);
     }
 }

@@ -8,20 +8,23 @@ import java.util.Objects;
 
 public class PurchaseRequest {
 
-    @NotNull
+    @NotNull(message = "userId cant be null")
     private Long userId;
-    @NotNull
+    @NotNull(message = "productId cant be null.")
     private Long productId;
+    @NotNull(message = "productTypeId cant be null.")
+    private Long productTypeId;
     @NotNull
-    @Min(1)
+    @Min(value = 1, message = "Quantity must be higher than zero.")
     private Integer quantity;
 
     public PurchaseRequest() {
     }
 
-    public PurchaseRequest(Long userId, Long productId, Integer quantity) {
+    public PurchaseRequest(Long userId, Long productId, Long productTypeId, Integer quantity) {
         this.userId = userId;
         this.productId = productId;
+        this.productTypeId = productTypeId;
         this.quantity = quantity;
     }
 
@@ -41,6 +44,14 @@ public class PurchaseRequest {
         this.productId = productId;
     }
 
+    public Long getProductTypeId() {
+        return productTypeId;
+    }
+
+    public void setProductTypeId(Long productTypeId) {
+        this.productTypeId = productTypeId;
+    }
+
     public Integer getQuantity() {
         return quantity;
     }
@@ -53,11 +64,11 @@ public class PurchaseRequest {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         PurchaseRequest that = (PurchaseRequest) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(productId, that.productId) && Objects.equals(quantity, that.quantity);
+        return Objects.equals(userId, that.userId) && Objects.equals(productId, that.productId) && Objects.equals(productTypeId, that.productTypeId) && Objects.equals(quantity, that.quantity);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, productId, quantity);
+        return Objects.hash(userId, productId, productTypeId, quantity);
     }
 }

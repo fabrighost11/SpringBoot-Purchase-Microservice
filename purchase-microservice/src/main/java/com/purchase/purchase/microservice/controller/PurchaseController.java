@@ -1,9 +1,10 @@
 package com.purchase.purchase.microservice.controller;
 
+import com.purchase.purchase.microservice.dto.response.ProductTypeResponse;
 import com.purchase.purchase.microservice.dto.response.PurchaseResponse;
 import com.purchase.purchase.microservice.dto.resquest.PurchaseRequest;
 import com.purchase.purchase.microservice.exception.ResourceNotFoundException;
-import com.purchase.purchase.microservice.service.PurchaseServiceImpl;
+import com.purchase.purchase.microservice.service.PurchaseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -12,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
 public class PurchaseController {
 
     @Autowired
-    private PurchaseServiceImpl service;
+    private PurchaseService service;
 
     @Operation(summary = "Get purchase by ID", description = "Search a product by its ID a return it")
     @ApiResponses({
@@ -34,6 +34,10 @@ public class PurchaseController {
         return new ResponseEntity<>(service.getPurchaseById(id), HttpStatus.OK);
     }
 
+    @GetMapping("product-type/{id}")
+    public ResponseEntity<List<PurchaseResponse>> getPurchaseByProductType(@PathVariable Long id) throws ResourceNotFoundException {
+        return new ResponseEntity<>(service.getAllPurchasesByProductTypeId(id), HttpStatus.OK);
+    }
 
     @Operation(summary = "List of products", description = "Return a list with all existing products")
     @ApiResponses({
@@ -45,6 +49,11 @@ public class PurchaseController {
         return new ResponseEntity<>(service.getAllPurchases(), HttpStatus.OK);
     }
 
+    @GetMapping("user/{id}")
+    public ResponseEntity<List<PurchaseResponse>> getPurchaseByUserId(@PathVariable Long id) throws ResourceNotFoundException {
+        return new ResponseEntity<>(service.getAllPurchasesByUserId(id), HttpStatus.OK);
+    }
+
     @Operation(summary = "Create purchase", description = "Create a new purchase")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Created."),
@@ -52,9 +61,10 @@ public class PurchaseController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping
-    public ResponseEntity<Mono<PurchaseResponse>> createPurchase(@Valid @RequestBody PurchaseRequest purchaseRequest) throws MethodArgumentNotValidException {
+    public ResponseEntity<PurchaseResponse> createPurchase(@Valid @RequestBody PurchaseRequest purchaseRequest) throws MethodArgumentNotValidException {
         return new ResponseEntity<>(service.createPurchase(purchaseRequest), HttpStatus.CREATED);
     }
+
 
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "No content, deleted."),

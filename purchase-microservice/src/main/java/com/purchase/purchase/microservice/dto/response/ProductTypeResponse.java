@@ -2,15 +2,15 @@ package com.purchase.purchase.microservice.dto.response;
 
 import java.util.Objects;
 
-public class TypeProductResponse {
+public class ProductTypeResponse {
 
     private Long id;
     private String name;
 
-    public TypeProductResponse() {
+    public ProductTypeResponse() {
     }
 
-    public TypeProductResponse(Long id, String name) {
+    public ProductTypeResponse(Long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -34,7 +34,7 @@ public class TypeProductResponse {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        TypeProductResponse that = (TypeProductResponse) o;
+        ProductTypeResponse that = (ProductTypeResponse) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name);
     }
 
