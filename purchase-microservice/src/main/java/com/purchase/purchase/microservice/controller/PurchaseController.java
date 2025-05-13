@@ -78,12 +78,13 @@ public class PurchaseController {
     }
 
 
+
+    @Operation(summary = "Delete purchase", description = "Delete a purchase by its ID")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "No content, deleted."),
             @ApiResponse(responseCode = "400", description = "Bad Request."),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @Operation(summary = "Delete purchase", description = "Delete a purchase by its ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePurchase(@PathVariable Long id) throws ResourceNotFoundException {
         service.deletePurchase(id);
