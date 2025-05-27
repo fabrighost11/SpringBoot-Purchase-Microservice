@@ -41,8 +41,8 @@ public class PurchaseController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @GetMapping("product-type/{id}")
-    public ResponseEntity<List<PurchaseResponse>> getPurchaseByProductType(@PathVariable Long id) throws ResourceNotFoundException {
-        return new ResponseEntity<>(service.getAllPurchasesByProductTypeId(id), HttpStatus.OK);
+    public ResponseEntity<List<PurchaseResponse>> getPurchaseByProductType(@PathVariable Long id, @RequestHeader("Authorization") String token) throws ResourceNotFoundException {
+        return new ResponseEntity<>(service.getAllPurchasesByProductTypeId(id,token), HttpStatus.OK);
     }
 
     @Operation(summary = "List of purchases", description = "Return a list with all existing purchases")
@@ -62,8 +62,8 @@ public class PurchaseController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @GetMapping("user/{id}")
-    public ResponseEntity<List<PurchaseResponse>> getPurchaseByUserId(@PathVariable Long id) throws ResourceNotFoundException {
-        return new ResponseEntity<>(service.getAllPurchasesByUserId(id), HttpStatus.OK);
+    public ResponseEntity<List<PurchaseResponse>> getPurchaseByUserId(@PathVariable Long id, @RequestHeader("Authorization") String token) throws ResourceNotFoundException {
+        return new ResponseEntity<>(service.getAllPurchasesByUserId(id,token), HttpStatus.OK);
     }
 
     @Operation(summary = "Create purchase", description = "Create a new purchase")
@@ -73,10 +73,9 @@ public class PurchaseController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping
-    public ResponseEntity<PurchaseResponse> createPurchase(@Valid @RequestBody PurchaseRequest purchaseRequest) throws MethodArgumentNotValidException {
-        return new ResponseEntity<>(service.createPurchase(purchaseRequest), HttpStatus.CREATED);
+    public ResponseEntity<PurchaseResponse> createPurchase(@Valid @RequestBody PurchaseRequest purchaseRequest, @RequestHeader("Authorization") String token) throws MethodArgumentNotValidException {
+        return new ResponseEntity<>(service.createPurchase(purchaseRequest,token), HttpStatus.CREATED);
     }
-
 
 
     @Operation(summary = "Delete purchase", description = "Delete a purchase by its ID")

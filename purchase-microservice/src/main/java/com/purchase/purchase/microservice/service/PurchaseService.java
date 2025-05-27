@@ -51,14 +51,10 @@ public class PurchaseService {
                 .collect(Collectors.toList());
     }
 
-    public PurchaseResponse createPurchase(PurchaseRequest purchaseRequest){
-        validateUser(purchaseRequest.getUserId());
-        validateProduct(purchaseRequest.getProductId());
-        validateProductType(purchaseRequest.getProductTypeId());
+    public PurchaseResponse createPurchase(PurchaseRequest purchaseRequest, String token){
 
-
-        ProductResponse product = productClient.getProductById(purchaseRequest.getProductId());
-        ProductTypeResponse productType = productTypeClient.getProductTypeById(purchaseRequest.getProductTypeId());
+        ProductResponse product = productClient.getProductById(purchaseRequest.getProductId(), token);
+        ProductTypeResponse productType = productTypeClient.getProductTypeById(purchaseRequest.getProductTypeId(), token);
 
 
         if(!product.getProductTypeId().equals(productType.getId())) throw new IllegalArgumentException("Product type does not match with the current product");
@@ -70,7 +66,7 @@ public class PurchaseService {
         purchase.setProductTypeId(productType.getId());
         purchase.setQuantity(purchaseRequest.getQuantity());
 
-        productClient.decreaseProductQuantity(purchase.getProductId(), purchase.getQuantity());
+        productClient.decreaseProductQuantity(purchase.getProductId(), purchase.getQuantity(), token);
 
         Purchase savedPurchase = purchaseRepository.save(purchase);
 
@@ -78,9 +74,9 @@ public class PurchaseService {
 
     }
 
-    public List<PurchaseResponse> getAllPurchasesByUserId(Long userId){
+    public List<PurchaseResponse> getAllPurchasesByUserId(Long userId, String token){
 
-        if (userClient.getUserById(userId) == null) throw new ResourceNotFoundException("User not found");
+        if (userClient.getUserById(userId, token) == null) throw new ResourceNotFoundException("User not found");
 
         return purchaseRepository.findPurchaseByUserId(userId)
                 .stream()
@@ -88,9 +84,9 @@ public class PurchaseService {
                 .collect(Collectors.toList());
     }
 
-    public List<PurchaseResponse> getAllPurchasesByProductTypeId(Long typeId){
+    public List<PurchaseResponse> getAllPurchasesByProductTypeId(Long typeId, String token){
 
-        if(productTypeClient.getProductTypeById(typeId) == null) throw new ResourceNotFoundException("Product type not found");
+        if(productTypeClient.getProductTypeById(typeId, token) == null) throw new ResourceNotFoundException("Product type not found");
 
         return purchaseRepository.findPurchaseByProductTypeId(typeId)
                 .stream()
@@ -102,21 +98,6 @@ public class PurchaseService {
         PurchaseResponse purchaseResponse = getPurchaseById(id);
         if(purchaseResponse.getId() == null) throw new ResourceNotFoundException("Purchase id cant be null");
         purchaseRepository.deleteById(id);
-    }
-
-    private void validateUser(Long id) {
-        UserResponse user = userClient.getUserById(id);
-        if (user == null) throw new ResourceNotFoundException("User not found");
-    }
-
-    private void validateProductType(Long id) {
-        ProductTypeResponse productType = productTypeClient.getProductTypeById(id);
-        if (productType == null) throw new ResourceNotFoundException("Product type not found");
-    }
-
-    private void validateProduct(Long id) {
-        ProductResponse product = productClient.getProductById(id);
-        if (product == null) throw new ResourceNotFoundException("Product not found");
     }
 
     private PurchaseResponse convertToPurchaseResponse(Purchase purchase) {
