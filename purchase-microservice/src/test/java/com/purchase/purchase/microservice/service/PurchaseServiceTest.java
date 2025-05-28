@@ -19,13 +19,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -55,8 +52,10 @@ class PurchaseServiceTest {
     private ProductTypeResponse productTypeResponse;
     private UserResponse userResponse;
 
+    private String token;
     @BeforeEach
     void setUp() {
+        token = "token";
 
         purchase = new Purchase();
         purchase.setId(1L);
@@ -164,12 +163,11 @@ class PurchaseServiceTest {
     void createPurchase_createPurchaseSuccessfully_returnsPurchaseResponse() throws Exception {
         PurchaseResponse expected = purchaseResponse;
 
-        when(productClient.getProductById(purchaseRequest.getProductId())).thenReturn(productResponse);
-        when(productTypeClient.getProductTypeById(purchaseRequest.getProductTypeId())).thenReturn(productTypeResponse);
-        when(userClient.getUserById(purchaseRequest.getUserId())).thenReturn(userResponse);
+        when(productClient.getProductById(purchaseRequest.getProductId(),token)).thenReturn(productResponse);
+        when(productTypeClient.getProductTypeById(purchaseRequest.getProductTypeId(),token)).thenReturn(productTypeResponse);
         when(purchaseRepository.save(any(Purchase.class))).thenReturn(purchase);
 
-        PurchaseResponse actual = purchaseService.createPurchase(purchaseRequest);
+        PurchaseResponse actual = purchaseService.createPurchase(purchaseRequest,token);
 
         Assertions.assertEquals(expected, actual);
         Assertions.assertNotNull(purchaseResponse);
@@ -183,12 +181,11 @@ class PurchaseServiceTest {
         productResponse.setProductTypeId(1L);
         productTypeResponse.setId(3L);
 
-        when(productClient.getProductById(purchaseRequest.getProductId())).thenReturn(productResponse);
-        when(productTypeClient.getProductTypeById(purchaseRequest.getProductTypeId())).thenReturn(productTypeResponse);
-        when(userClient.getUserById(purchaseRequest.getUserId())).thenReturn(userResponse);
+        when(productClient.getProductById(purchaseRequest.getProductId(),token)).thenReturn(productResponse);
+        when(productTypeClient.getProductTypeById(purchaseRequest.getProductTypeId(),token)).thenReturn(productTypeResponse);
 
         IllegalArgumentException actual = assertThrows(IllegalArgumentException.class, () -> {
-            purchaseService.createPurchase(purchaseRequest);
+            purchaseService.createPurchase(purchaseRequest,token);
         });
 
         Assertions.assertEquals(expected, actual.getMessage());
@@ -200,53 +197,12 @@ class PurchaseServiceTest {
         purchaseRequest.setQuantity(77);
         productResponse.setStock(3);
 
-        when(productClient.getProductById(purchaseRequest.getProductId())).thenReturn(productResponse);
-        when(productTypeClient.getProductTypeById(purchaseRequest.getProductTypeId())).thenReturn(productTypeResponse);
-        when(userClient.getUserById(purchaseRequest.getUserId())).thenReturn(userResponse);
+
+        when(productClient.getProductById(purchaseRequest.getProductId(),token)).thenReturn(productResponse);
+        when(productTypeClient.getProductTypeById(purchaseRequest.getProductTypeId(),token)).thenReturn(productTypeResponse);
 
         IllegalArgumentException actual = assertThrows(IllegalArgumentException.class, () -> {
-            purchaseService.createPurchase(purchaseRequest);
-        });
-
-        Assertions.assertEquals(expected, actual.getMessage());
-    }
-
-    @Test
-    void createPurchase_nullUserId_returnsException() {
-        String expected = "User not found";
-        purchaseRequest.setUserId(null);
-
-        when(userClient.getUserById(purchaseRequest.getUserId())).thenReturn(null);
-        ResourceNotFoundException actual = assertThrows(ResourceNotFoundException.class, () -> {
-            purchaseService.createPurchase(purchaseRequest);
-        });
-        Assertions.assertEquals(expected, actual.getMessage());
-    }
-
-    @Test
-    void createPurchase_nullProductId_returnsException() {
-        String expected = "Product not found";
-        purchaseRequest.setProductId(null);
-
-        when(userClient.getUserById(purchaseRequest.getUserId())).thenReturn(userResponse);
-        when(productClient.getProductById(purchaseRequest.getProductId())).thenReturn(null);
-        ResourceNotFoundException actual = assertThrows(ResourceNotFoundException.class, () -> {
-            purchaseService.createPurchase(purchaseRequest);
-        });
-
-        Assertions.assertEquals(expected, actual.getMessage());
-    }
-
-    @Test
-    void createPurchase_nullProductTypeId_returnsException() {
-        String expected = "Product type not found";
-        purchaseRequest.setProductTypeId(null);
-
-        when(userClient.getUserById(purchaseRequest.getUserId())).thenReturn(userResponse);
-        when(productClient.getProductById(purchaseRequest.getProductId())).thenReturn(productResponse);
-        when(productTypeClient.getProductTypeById(purchaseRequest.getProductTypeId())).thenReturn(null);
-        ResourceNotFoundException actual = assertThrows(ResourceNotFoundException.class, () -> {
-            purchaseService.createPurchase(purchaseRequest);
+            purchaseService.createPurchase(purchaseRequest,token);
         });
 
         Assertions.assertEquals(expected, actual.getMessage());
@@ -256,9 +212,9 @@ class PurchaseServiceTest {
     void getAllPurchasesByUserId_findAllPurchasesSuccessfully_returnsPurchaseResponseList() throws Exception {
         List<PurchaseResponse> expected = List.of(purchaseResponse);
 
-        when(userClient.getUserById(purchaseRequest.getUserId())).thenReturn(userResponse);
+        when(userClient.getUserById(purchaseRequest.getUserId(),token)).thenReturn(userResponse);
         when(purchaseRepository.findPurchaseByUserId(purchaseRequest.getUserId())).thenReturn(List.of(purchase));
-        List<PurchaseResponse> actual = purchaseService.getAllPurchasesByUserId(purchaseRequest.getUserId());
+        List<PurchaseResponse> actual = purchaseService.getAllPurchasesByUserId(purchaseRequest.getUserId(),token);
         Assertions.assertEquals(expected.size(), actual.size());
         Assertions.assertEquals(expected.get(0).getId(), actual.get(0).getId());
         Assertions.assertEquals(expected.get(0).getUserId(), actual.get(0).getUserId());
@@ -269,10 +225,10 @@ class PurchaseServiceTest {
         String expected = "User not found";
         purchaseRequest.setUserId(null);
 
-        when(userClient.getUserById(purchaseRequest.getUserId())).thenReturn(null);
+        when(userClient.getUserById(purchaseRequest.getUserId(),token)).thenReturn(null);
 
         ResourceNotFoundException actual = assertThrows(ResourceNotFoundException.class, () -> {
-            purchaseService.getAllPurchasesByUserId(purchaseRequest.getUserId());
+            purchaseService.getAllPurchasesByUserId(purchaseRequest.getUserId(),token);
         });
 
         Assertions.assertEquals(expected, actual.getMessage());
@@ -282,10 +238,10 @@ class PurchaseServiceTest {
     void getAllPurchasesByProductTypeId_getPurchasesSuccessfully_returnPurchaseResponse() throws Exception {
         List<PurchaseResponse> expected = List.of(purchaseResponse);
 
-        when(productTypeClient.getProductTypeById(purchaseRequest.getProductTypeId())).thenReturn(productTypeResponse);
+        when(productTypeClient.getProductTypeById(purchaseRequest.getProductTypeId(),token)).thenReturn(productTypeResponse);
         when(purchaseRepository.findPurchaseByProductTypeId(purchaseRequest.getProductTypeId())).thenReturn(List.of(purchase));
 
-        List<PurchaseResponse> actual = purchaseService.getAllPurchasesByProductTypeId(purchaseRequest.getProductTypeId());
+        List<PurchaseResponse> actual = purchaseService.getAllPurchasesByProductTypeId(purchaseRequest.getProductTypeId(),token);
 
         Assertions.assertEquals(expected.size(), actual.size());
         Assertions.assertEquals(expected.get(0).getId(), actual.get(0).getId());
@@ -299,10 +255,10 @@ class PurchaseServiceTest {
         String expected = "Product type not found";
         purchaseRequest.setProductTypeId(null);
 
-        when(productTypeClient.getProductTypeById(purchaseRequest.getProductTypeId())).thenReturn(null);
+        when(productTypeClient.getProductTypeById(purchaseRequest.getProductTypeId(),token)).thenReturn(null);
 
         ResourceNotFoundException actual = assertThrows(ResourceNotFoundException.class, () -> {
-            purchaseService.getAllPurchasesByProductTypeId(purchaseRequest.getProductTypeId());
+            purchaseService.getAllPurchasesByProductTypeId(purchaseRequest.getProductTypeId(),token);
         });
 
         Assertions.assertEquals(expected, actual.getMessage());

@@ -74,6 +74,7 @@ public class PurchaseController {
     })
     @PostMapping
     public ResponseEntity<PurchaseResponse> createPurchase(@Valid @RequestBody PurchaseRequest purchaseRequest, @RequestHeader("Authorization") String token) throws MethodArgumentNotValidException {
+        System.out.println("Petición recibida: " + purchaseRequest);
         return new ResponseEntity<>(service.createPurchase(purchaseRequest,token), HttpStatus.CREATED);
     }
 

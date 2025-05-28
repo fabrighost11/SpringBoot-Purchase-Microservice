@@ -1,5 +1,6 @@
 package com.purchase.purchase.microservice;
 
+import com.purchase.purchase.microservice.dto.response.PurchaseResponse;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

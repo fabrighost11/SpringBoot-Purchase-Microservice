@@ -1,5 +1,6 @@
 package com.purchase.purchase.microservice.dto.resquest;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.validation.constraints.Min;
@@ -7,7 +8,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 import java.util.Objects;
-
 @Schema(description = "Purchase request to create or update a purchase")
 public class PurchaseRequest {
 
