@@ -1,9 +1,16 @@
 package com.purchase.purchase.microservice.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity(name = "PURCHASE")
 public class Purchase {
 
@@ -19,66 +26,4 @@ public class Purchase {
     @Column(name = "quantity")
     private Integer quantity;
 
-    public Purchase() {
-    }
-
-    public Purchase(Long id, Long userId, Long productId, Long productTypeId, Integer quantity) {
-        this.id = id;
-        this.userId = userId;
-        this.productId = productId;
-        this.productTypeId = productTypeId;
-        this.quantity = quantity;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
-    public Long getProductTypeId() {
-        return productTypeId;
-    }
-
-    public void setProductTypeId(Long productTypeId) {
-        this.productTypeId = productTypeId;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Purchase purchase = (Purchase) o;
-        return Objects.equals(id, purchase.id) && Objects.equals(userId, purchase.userId) && Objects.equals(productId, purchase.productId) && Objects.equals(productTypeId, purchase.productTypeId) && Objects.equals(quantity, purchase.quantity);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, userId, productId, productTypeId, quantity);
-    }
 }
