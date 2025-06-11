@@ -17,7 +17,7 @@ public OpenAPI customOpenAPI() {
                     .description("Documentation about purchase microservice endpoints")
                     .version("1.0.0"))
             .addServersItem(new Server()
-                    .url("http://localhost:8082/api/purchase")
+                    .url("http://localhost:8082/")
                     .description("Servidor local"));
     }
 }
